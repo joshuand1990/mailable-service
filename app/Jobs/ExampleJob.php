@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Queueable;
+
 class ExampleJob extends Job
 {
     /**
@@ -21,6 +23,6 @@ class ExampleJob extends Job
      */
     public function handle()
     {
-        //
+        echo ("Handle");
     }
 }

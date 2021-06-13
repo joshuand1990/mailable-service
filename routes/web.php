@@ -13,6 +13,10 @@
 |
 */
 
+use Illuminate\Support\Facades\Queue;
+
 $router->get('/', function () use ($router) {
+
+    Queue::push(new \App\Jobs\ExampleJob);
     return $router->app->version();
 });
