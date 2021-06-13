@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  php:
+    build: ./docker-images/php
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html/
+    command: php-fpm
+    ports:
+      - "9001:9000"
+    environment:
+      APP_ENV: docker-local
+      APP_DEBUG: 'true'
+    networks:
+    - mailable_network
+
+networks:
+  mailable_network:
+    driver: bridge
