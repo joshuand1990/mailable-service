@@ -4,17 +4,64 @@
 namespace Domain\Mail;
 
 
+use Domain\Mail\Transports\MailJetTransport;
+use Domain\Mail\Transports\SendGridTransport;
+use Domain\Mail\Transports\Transportable;
+use Illuminate\Contracts\Container\Container as Application;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
+
 class Mailer
 {
+    protected Application $app;
+    protected string $current;
+    protected array $mailers = [];
 
-    public function __construct(string $name, Dispatcher $events = null)
+    public function __construct(Application $app)
     {
-        $this->name = $name;
-        $this->events = $events;
+        $this->app = $app;
+        $this->current = $this->getDefaultDriver();
+    }
+    public function send(Message $message, $transport = null)
+    {
+        $this->createTransport($transport)->send($message);
+        return $this;
+    }
+    public function getDrivers(): Collection
+    {
+        return collect($this->getConfig()['mail.drivers'])
+            ->reject(function ($item) {
+                return !isset($item['active']) or $item['active'] === false;
+            })->sortBy(function ($item){
+                return $item['priority'];
+            })->keys();
     }
 
-    public function queue($view, $queue = null)
+    public function getDefaultDriver()
     {
-        return $view->mailer($this->name)->queue($this->queue);
+        return $this->getConfig()['mail.default'];
+
+    }
+    protected function createTransport($transport = null): Transportable
+    {
+        $transport = $transport ?? $this->getDefaultDriver();
+        $this->current = $transport;
+        if(!method_exists($this, $method = sprintf('setUp%sTransport', ucfirst($transport)))) {
+            throw new \InvalidArgumentException(sprintf("%s: Doesn't Exist", $transport));
+        }
+        return $this->{$method}($this->getConfig()["mail.drivers.{$transport}"]);
+    }
+    protected function setUpMailjetTransport(array $config): Transportable
+    {
+        return new MailJetTransport();
+    }
+    protected function setUpSendgridTransport(array $config): Transportable
+    {
+        return new SendGridTransport();
+    }
+    protected function getConfig()
+    {
+        return $this->app['config'];
     }
 }

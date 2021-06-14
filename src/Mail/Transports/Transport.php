@@ -4,7 +4,7 @@
 namespace Domain\Mail\Transports;
 
 
-abstract class Transport
+abstract class Transport implements Transportable
 {
 
 }
