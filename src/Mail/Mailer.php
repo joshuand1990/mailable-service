@@ -23,11 +23,20 @@ class Mailer
         $this->app = $app;
         $this->current = $this->getDefaultDriver();
     }
-    public function send(Message $message, $transport = null)
+
+    public function send(Message $message, $transport = null): self
     {
-        $this->createTransport($transport)->send($message);
+        $transport = $transport ?? $this->getDefaultDriver();
+        $this->current = $transport;
+
+        if(array_key_exists($transport, $this->mailers)) {
+            $this->mailers[$transport] = $this->createTransport($transport);
+        }
+
+        $this->mailers[$transport]->send($message);
         return $this;
     }
+
     public function getDrivers(): Collection
     {
         return collect($this->getConfig()['mail.drivers'])
@@ -43,23 +52,25 @@ class Mailer
         return $this->getConfig()['mail.default'];
 
     }
-    protected function createTransport($transport = null): Transportable
+
+    protected function createTransport($transport): Transportable
     {
-        $transport = $transport ?? $this->getDefaultDriver();
-        $this->current = $transport;
         if(!method_exists($this, $method = sprintf('setUp%sTransport', ucfirst($transport)))) {
             throw new \InvalidArgumentException(sprintf("%s: Doesn't Exist", $transport));
         }
         return $this->{$method}($this->getConfig()["mail.drivers.{$transport}"]);
     }
+
     protected function setUpMailjetTransport(array $config): Transportable
     {
         return new MailJetTransport();
     }
+
     protected function setUpSendgridTransport(array $config): Transportable
     {
         return new SendGridTransport();
     }
+
     protected function getConfig()
     {
         return $this->app['config'];

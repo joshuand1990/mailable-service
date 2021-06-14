@@ -16,7 +16,7 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
     public function register()
     {
         $this->app->bind('mailer', function ($app) {
-            return new Mailer();
+            return new Mailer($app);
         });
     }
 
