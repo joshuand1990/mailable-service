@@ -59,7 +59,7 @@ $app->singleton(
 |
 */
 
-foreach ([ 'app', 'queue', 'database' ] as $config) {
+foreach ([ 'app', 'queue', 'database', 'mail' ] as $config) {
     $app->configure($config);
 }
 
