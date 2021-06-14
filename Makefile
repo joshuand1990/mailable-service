@@ -18,3 +18,5 @@ install:
 	@docker compose exec php composer install
 deps:
 	@docker compose exec php composer install --prefer-dist
+test:
+	@docker compose exec php composer test

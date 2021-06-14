@@ -59,9 +59,9 @@ $app->singleton(
 |
 */
 
-$app->configure('app');
-$app->configure('queue');
-$app->configure('database');
+foreach ([ 'app', 'queue', 'database' ] as $config) {
+    $app->configure($config);
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +97,7 @@ $app->configure('database');
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(Domain\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
