@@ -8,6 +8,6 @@ use Domain\Mail\Messageable;
 
 interface Transportable
 {
-    public function send(Messageable $message);
+    public function submit(Messageable $message);
 
 }

@@ -6,11 +6,12 @@ namespace Domain\Mail\Transports;
 
 use Domain\Mail\Messageable;
 
-class MailJetTransport extends Transport
+class MailJetTransport extends ApiTransport
 {
 
-    public function send(Messageable $message)
+
+    public function submit(Messageable $message)
     {
-        dd(__CLASS__);
+        // TODO: Implement submit() method.
     }
 }

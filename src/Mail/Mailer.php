@@ -29,11 +29,11 @@ class Mailer
         $transport = $transport ?? $this->getDefaultDriver();
         $this->current = $transport;
 
-        if(array_key_exists($transport, $this->mailers)) {
+        if(!array_key_exists($transport, $this->mailers)) {
             $this->mailers[$transport] = $this->createTransport($transport);
         }
 
-        $this->mailers[$transport]->send($message);
+        $this->mailers[$transport]->submit($message);
         return $this;
     }
 
@@ -50,7 +50,6 @@ class Mailer
     public function getDefaultDriver()
     {
         return $this->getConfig()['mail.default'];
-
     }
 
     protected function createTransport($transport): Transportable

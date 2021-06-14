@@ -6,16 +6,11 @@ namespace Domain\Mail\Transports;
 
 use Domain\Mail\Messageable;
 
-class SendGridTransport extends Transport
+class SendGridTransport extends ApiTransport
 {
 
-    public function __construct()
+    public function submit(Messageable $message)
     {
-
-    }
-
-    public function send(Messageable $message)
-    {
-        // TODO: Implement send() method.
+        // TODO: Implement submit() method.
     }
 }
