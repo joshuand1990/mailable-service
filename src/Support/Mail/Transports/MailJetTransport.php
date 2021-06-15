@@ -6,7 +6,6 @@ namespace Domain\Support\Mail\Transports;
 
 use Domain\Support\Mail\Messageable;
 use Exception;
-use Psr\Http\Client\ClientExceptionInterface as GuzzleException;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
 
@@ -69,7 +68,7 @@ class MailJetTransport extends ApiBasedTransport
     protected function emailClient(Messageable $message)
     {
         return $this->request('POST', self::VERSION.'/send', [
-             'header' => ['Content-Type', 'application/json'],
+            'header' => ['Content-Type' => 'application/json'],
             'json' => $this->formatMessage($message),
             'auth' => [ $this->config['apiKey'], $this->config['secretKey'] ] ]);
 

@@ -4,11 +4,10 @@
 namespace Tests\Domain\Support\Mail\Transports;
 
 
-use Domain\Support\Mail\Message;
+
 use Domain\Support\Mail\Transports\MailJetTransport;
 use Exception;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;
@@ -26,7 +25,7 @@ class MailJetTransportTest extends \TestCase
         $this->assertEquals('https://api.mailjet.com/', $transport->getBaseUrl());
     }
 
-     /** @test */
+    /** @test */
     public function it_should_overwrite_url()
     {
         $this->expectException(InvalidArgumentException::class);
