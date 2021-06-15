@@ -5,6 +5,7 @@ namespace Domain\Mail\Transports;
 
 
 use Domain\Mail\Messageable;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
 
@@ -34,11 +35,15 @@ class MailJetTransport extends ApiBasedTransport
 
     public function submit(Messageable $message)
     {
-        $response = $this->emailClient($message);
-        if($response->getStatusCode() == Response::HTTP_OK) {
-            return true;
+        try {
+            $response = $this->emailClient($message);
+            if ($response->getStatusCode() == Response::HTTP_OK) {
+                return true;
+            }
+        } catch (GuzzleException $e){
+            return false;
         }
-        return false;
+
     }
 
     public function formatMessage(Messageable $message) : array

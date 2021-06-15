@@ -11,7 +11,7 @@ class MailerTest extends \TestCase
         $default = 'xxxy';
         $this->app['config']['mail.default'] = $default;
         $mailer = new Mailer(app());
-        $this->assertEquals($default, $mailer->getDefaultDriver());;
+        $this->assertEquals($default, $mailer->getDefaultTransport());;
     }
 
     /** @test */
@@ -22,7 +22,7 @@ class MailerTest extends \TestCase
             'yyy' => [ 'priority' => 1, 'active' => true ]
         ];
         $mailer = new Mailer(app());
-        $this->assertEquals(['yyy', 'xxx'], $mailer->getDrivers()->toArray());
+        $this->assertEquals(['yyy' => 'yyy', 'xxx' => 'xxx'], $mailer->getDrivers());
     }
 
      /** @test */
@@ -33,6 +33,6 @@ class MailerTest extends \TestCase
             'yyy' => [ 'priority' => 1, 'active' => false ]
         ];
         $mailer = new Mailer(app());
-        $this->assertEquals(['xxx'], $mailer->getDrivers()->toArray());
+        $this->assertEquals(['xxx' => 'xxx'], $mailer->getDrivers());
     }
 }

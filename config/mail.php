@@ -12,7 +12,7 @@ return [
         ],
         'sendgrid' => [
             'priority' => 2,
-            'active' => true,
+            'active' => false,
             'url' => env('SENDGRID_URL', 'https://google.com')
         ]
     ]
