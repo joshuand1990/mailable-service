@@ -97,7 +97,7 @@ foreach ([ 'app', 'queue', 'database', 'mail' ] as $config) {
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
-$app->register(Domain\Mail\MailServiceProvider::class);
+$app->register(\Domain\Application\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
