@@ -21,7 +21,7 @@ class Mailer implements Mailerable
 
     public function getCurrentTransport() : string
     {
-        return $this->current;
+        return $this->current ?? $this->getDefaultTransport();
     }
 
     public function send(Message $message): self
