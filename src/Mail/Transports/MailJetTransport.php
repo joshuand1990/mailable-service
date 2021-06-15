@@ -5,6 +5,7 @@ namespace Domain\Mail\Transports;
 
 
 use Domain\Mail\Messageable;
+use Illuminate\Http\Response;
 use InvalidArgumentException;
 
 class MailJetTransport extends ApiBasedTransport
@@ -15,15 +16,15 @@ class MailJetTransport extends ApiBasedTransport
     /**
      * MailJetTransport constructor.
      */
-    public function __construct(string $url = null, string $publicKey = null, string $privateKey = null, array $config = [])
+    public function __construct(string $url = null, string $apiKey = null, string $secretKey = null, array $config = [])
     {
         $this->config = $config;
         $this->config['base_uri'] = $url ?? 'https://api.mailjet.com/v3.1';
-        if(is_null($publicKey) or is_null($privateKey)) {
+        if(is_null($apiKey) or is_null($secretKey)) {
             throw new InvalidArgumentException("Public / Private Key not set.");
         }
-        $this->config['publicKey'] = $publicKey;
-        $this->config['privateKey'] = $privateKey;
+        $this->config['apiKey'] = $apiKey;
+        $this->config['secretKey'] = $secretKey;
         parent::__construct($this->config);
     }
 
@@ -31,10 +32,41 @@ class MailJetTransport extends ApiBasedTransport
     {
         return $this->config['base_uri'];
     }
-
-
+    
     public function submit(Messageable $message)
     {
-        // TODO: Implement submit() method.
+        $response = $this->emailClient($message);
+        if($response->getStatusCode() == Response::HTTP_OK) {
+            return true;
+        }
+        return false;
+    }
+
+    public function formatMessage(Messageable $message) : array
+    {
+        $to = [];
+        foreach ($message->getTo() as $email => $name) {
+            $to[] = [ "Email" => $email, 'Name' => $name ];
+        }
+        return  [
+            "Messages" => [
+                "Form" => [
+                    "Email" => $message->getFromEmail(),
+                    "Name" => $message->getFromName()
+                ],
+                "To" => $to,
+                "Subject" => $message->getSubject(),
+                "TextPart" => $message->getBody(),
+                "HTMLPart" => ''
+            ]
+        ];
+    }
+
+    protected function emailClient(Messageable $message)
+    {
+        return $this->request('POST', 'send', [
+            'json' => json_encode($this->formatMessage($message)),
+            'auth' => [ $this->config['apiKey'], $this->config['secretKey'] ] ]);
+
     }
 }

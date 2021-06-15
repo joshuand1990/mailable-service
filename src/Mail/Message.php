@@ -6,15 +6,20 @@ namespace Domain\Mail;
 
 class Message implements Messageable
 {
-    protected string $fromName;
-    protected string $fromEmail;
+    protected string $fromName = '';
+    protected string $fromEmail = '';
     protected array $to = [];
     protected array $cc = [];
     protected array $bcc = [];
-    protected string $subject;
-    protected string $body;
+    protected string $subject = '';
+    protected string $body = '';
 
-    public function setFrom(string $name, string $email): self
+    public function body(string $content): self
+    {
+        $this->body = $content;
+        return $this;
+    }
+    public function from(string $name, string $email): self
     {
         $this->fromName = $name;
         $this->fromEmail = $email;
@@ -36,6 +41,12 @@ class Message implements Messageable
     public function bcc(string $name, string $email): self
     {
         $this->bcc[$email] = $name;
+        return $this;
+    }
+
+    public function subject(string $subject) : self
+    {
+        $this->subject = $subject;
         return $this;
     }
 
@@ -72,12 +83,6 @@ class Message implements Messageable
     public function getBody(): string
     {
         return $this->body;
-    }
-
-    public function setSubject(string $subject) : self
-    {
-        $this->subject = $subject;
-        return $this;
     }
 
 }

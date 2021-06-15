@@ -22,7 +22,7 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
 
         $this->app->singleton(MailJetTransport::class, function() {
             $config = $this->app['config']['mail.drivers.mailjet'];
-            return new MailJetTransport($config['url'], $config['publicKey'], $config['privateKey'], $config);
+            return new MailJetTransport($config['url'], $config['apiKey'], $config['secretKey'], $config);
         });
     }
 
