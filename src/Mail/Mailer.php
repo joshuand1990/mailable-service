@@ -21,12 +21,16 @@ class Mailer
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->current = $this->getDefaultDriver();
+        $this->current = $this->getDefaultTransport();
     }
 
-    public function send(Message $message, $transport = null): self
+    public function getCurrentTransport() : string
     {
-        $transport = $transport ?? $this->getDefaultDriver();
+        return $this->current;
+    }
+    public function send(Message $message, $usedTransports = []): self
+    {
+        $transport = $transport ?? $this->getCurrentTransport();
         $this->current = $transport;
 
         if(!array_key_exists($transport, $this->mailers)) {
@@ -37,19 +41,25 @@ class Mailer
         return $this;
     }
 
-    public function getDrivers(): Collection
+    public function getDrivers(): array
     {
-        return collect($this->getConfig()['mail.drivers'])
+        $drivers = collect($this->getConfig()['mail.drivers'])
             ->reject(function ($item) {
                 return !isset($item['active']) or $item['active'] === false;
             })->sortBy(function ($item){
                 return $item['priority'];
-            })->keys();
+            })->keys()->toArray();
+        return array_combine($drivers, $drivers);
     }
 
-    public function getDefaultDriver()
+    public function getDefaultTransport(): string
     {
         return $this->getConfig()['mail.default'];
+    }
+    public function setCurrentTransport(string $transport): self
+    {
+        $this->current = $transport;
+        return $this;
     }
 
     protected function createTransport($transport): Transportable
@@ -73,5 +83,10 @@ class Mailer
     protected function getConfig()
     {
         return $this->app['config'];
+    }
+
+    public function getNextTransport($userTransports = [])
+    {
+
     }
 }
