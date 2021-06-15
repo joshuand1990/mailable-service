@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
+use Laravel\Lumen\Exceptions\Handler;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -21,5 +23,27 @@ abstract class TestCase extends BaseTestCase
     public function createApplication()
     {
         return require __DIR__.'/../bootstrap/app.php';
+    }
+
+    public function faker()
+    {
+        return $this->faker;
+    }
+
+    public function withoutExceptionHandling()
+    {
+        $this->app->instance(ExceptionHandler::class,
+            new class extends Handler {
+               public function render($request, Throwable $e)
+               {
+                   throw $e;
+               }
+
+               public function report(Throwable $e)
+               {
+                   throw $e;
+               }
+           });
+        return $this;
     }
 }
