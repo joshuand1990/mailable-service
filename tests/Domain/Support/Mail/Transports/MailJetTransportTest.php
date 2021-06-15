@@ -6,13 +6,18 @@ namespace Tests\Domain\Support\Mail\Transports;
 
 use Domain\Support\Mail\Message;
 use Domain\Support\Mail\Transports\MailJetTransport;
+use Exception;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;
+use Tests\Domain\Support\Mail\SetUpMessageTrait;
 
 
 class MailJetTransportTest extends \TestCase
 {
+    use SetUpMessageTrait, SwapTransportsTrait;
     /** @test */
     public function it_should_validate_configuration_items()
     {
@@ -38,24 +43,24 @@ class MailJetTransportTest extends \TestCase
     /** @test */
     public function it_should_submit_with_ok_status()
     {
-        $mockHandler = $this->swapInstance();
+        $mockHandler = $this->swapMailJetInstance();
         $mockHandler->append(new Response(200, [], ' {"Messages":[{"Status":"success","CustomID":"AppGettingStartedTest","To":[{"Email":"joshuand1990@gmail.com","MessageUUID":"4fe86ee6-f896-4e5c-a114-9ea05c99c5d8","MessageID":576460760258009797,"MessageHref":"https://api.mailjet.com/v3/REST/message/576460760258009797"}],"Cc":[],"Bcc":[]}]}'));
         list($expectation, $message) = $this->expectationSetUp();
         $mailjet = app(MailJetTransport::class);
         $this->assertTrue($mailjet->submit($message));
 
     }
-
-    private function swapInstance() : MockHandler
+    /** @test */
+    public function it_should_throw_error_when_response_is_invalid()
     {
-        $mockHandler = new MockHandler();
-        $client = new MailJetTransport(null, 'xx', 'xx', [
-            'handler' => $mockHandler
-        ]);
-
-        $this->app->instance(MailJetTransport::class, $client);
-        return $mockHandler;
+        $this->expectException(Exception::class);
+        $mailjetMockHandler = $this->swapMailJetInstance();
+        $mailjetMockHandler->append(new RequestException("Error", new Request('POST', MailJetTransport::VERSION.'/send'), new Response(500, [])));
+        list($expectation, $message) = $this->expectationSetUp();
+        $mailjet = app(MailJetTransport::class);
+        $this->assertTrue($mailjet->submit($message));
     }
+
     /**
      * @return array
      */
@@ -73,11 +78,8 @@ class MailJetTransportTest extends \TestCase
                 ]
             ]
         ];
-        $message = new Message();
-        $message->from($fromName, $fromEmail);
-        $message->to($toName, $toEmail);
-        $message->subject($subject);
-        $message->body($body);
+        $message = $this->setUpMessage($fromName, $fromEmail, $toName, $toEmail, $subject, $body);
+
         return array($expectation, $message);
     }
 }

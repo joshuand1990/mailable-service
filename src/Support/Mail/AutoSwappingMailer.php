@@ -9,27 +9,27 @@ use Exception;
 class AutoSwappingMailer implements Mailerable
 {
     protected Mailerable $mailer;
-    protected static array $usedTransports = [];
+    protected array $usedTransports = [];
     /**
      * AutoSwappingMailer constructor.
      */
     public function __construct(Mailerable $mailer)
     {
         $this->mailer = $mailer;
-        $this->swapTransportIfException();
     }
 
-      public function swapTransportIfException()
+    public function swapTransportIfException(): self
     {
-        $transports = array_diff(array_unique(static::$usedTransports), $this->mailer->getTransports());
+        $transports = array_diff($this->mailer->getTransports(), $this->usedTransports);
         if(count($transports) == 0) {
             $transports = $this->mailer->getTransports();
-            static::$usedTransports = [];
+            $this->usedTransports = [];
         }
         foreach($transports as $transport) {
             $this->mailer->setCurrentTransport($transport);
-            return;
+            return $this;
         }
+        return $this;
     }
 
     public function send(Message $message)
@@ -37,8 +37,13 @@ class AutoSwappingMailer implements Mailerable
         try {
             $this->mailer->send($message);
         }catch (Exception $e) {
-            static::$usedTransports[$this->getCurrentTransport()] = $this->getCurrentTransport();
+            $this->usedTransports[$this->getCurrentTransport()] = $this->getCurrentTransport();
+            $this->swapTransportIfException();
         }
+    }
+    public function getUsedTransports(): array
+    {
+        return $this->usedTransports;
     }
 
     public function getTransports(): array
