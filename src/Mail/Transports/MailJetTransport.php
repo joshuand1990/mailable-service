@@ -11,15 +11,14 @@ use InvalidArgumentException;
 class MailJetTransport extends ApiBasedTransport
 {
     protected array $config = [];
-
-
+    const VERSION = 'v3.1';
     /**
      * MailJetTransport constructor.
      */
     public function __construct(string $url = null, string $apiKey = null, string $secretKey = null, array $config = [])
     {
         $this->config = $config;
-        $this->config['base_uri'] = $url ?? 'https://api.mailjet.com/v3.1';
+        $this->config['base_uri'] = $url ?? 'https://api.mailjet.com/';
         if(is_null($apiKey) or is_null($secretKey)) {
             throw new InvalidArgumentException("Public / Private Key not set.");
         }
@@ -32,7 +31,7 @@ class MailJetTransport extends ApiBasedTransport
     {
         return $this->config['base_uri'];
     }
-    
+
     public function submit(Messageable $message)
     {
         $response = $this->emailClient($message);
@@ -49,23 +48,22 @@ class MailJetTransport extends ApiBasedTransport
             $to[] = [ "Email" => $email, 'Name' => $name ];
         }
         return  [
-            "Messages" => [
-                "Form" => [
-                    "Email" => $message->getFromEmail(),
-                    "Name" => $message->getFromName()
-                ],
-                "To" => $to,
-                "Subject" => $message->getSubject(),
-                "TextPart" => $message->getBody(),
-                "HTMLPart" => ''
+            'Messages' => [
+                [
+                    'From' => [ 'Email' => $message->getFromEmail(),  'Name' => $message->getFromName() ],
+                    'To' => $to,
+                    'Subject' => $message->getSubject(),
+                    'TextPart' => $message->getBody()
+                ]
             ]
         ];
     }
 
     protected function emailClient(Messageable $message)
     {
-        return $this->request('POST', 'send', [
-            'json' => json_encode($this->formatMessage($message)),
+        return $this->request('POST', self::VERSION.'/send', [
+             'header' => ['Content-Type', 'application/json'],
+            'json' => $this->formatMessage($message),
             'auth' => [ $this->config['apiKey'], $this->config['secretKey'] ] ]);
 
     }

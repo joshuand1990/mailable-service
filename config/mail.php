@@ -7,8 +7,8 @@ return [
             'priority' => 1,
             'active' => true,
             'url' => env('MAILJET_URL', null),
-            'apiKey' => '',
-            'secretKey' => ''
+            'apiKey' => env('MAILJET_API_KEY'),
+            'secretKey' => env('MAILJET_SECRET_KEY')
         ],
         'sendgrid' => [
             'priority' => 2,
