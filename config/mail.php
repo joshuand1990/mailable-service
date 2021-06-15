@@ -13,7 +13,8 @@ return [
         'sendgrid' => [
             'priority' => 2,
             'active' => true,
-            'url' => env('SENDGRID_URL', 'https://google.com')
+            'url' => env('SENDGRID_URL', 'https://google.com'),
+            'apiKey' => env('SENDGRID_API_KEY')
         ]
     ]
 ];
