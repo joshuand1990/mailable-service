@@ -6,7 +6,7 @@ return [
         'mailjet' => [
             'priority' => 1,
             'active' => true,
-            'url' => env('MAILJET_URL', 'https://google.com')
+            'url' => env('MAILJET_URL', null)
         ],
         'sendgrid' => [
             'priority' => 2,

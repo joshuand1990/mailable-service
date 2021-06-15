@@ -57,17 +57,17 @@ class Mailer
         if(!method_exists($this, $method = sprintf('setUp%sTransport', ucfirst($transport)))) {
             throw new \InvalidArgumentException(sprintf("%s: Doesn't Exist", $transport));
         }
-        return $this->{$method}($this->getConfig()["mail.drivers.{$transport}"]);
+        return $this->{$method}();
     }
 
-    protected function setUpMailjetTransport(array $config): Transportable
+    protected function setUpMailjetTransport(): Transportable
     {
-        return new MailJetTransport();
+        return  app(MailJetTransport::class);
     }
 
-    protected function setUpSendgridTransport(array $config): Transportable
+    protected function setUpSendgridTransport(): Transportable
     {
-        return new SendGridTransport();
+        return  app(SendGridTransport::class);
     }
 
     protected function getConfig()

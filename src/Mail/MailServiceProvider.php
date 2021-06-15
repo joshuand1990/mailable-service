@@ -3,6 +3,7 @@
 
 namespace Domain\Mail;
 
+use Domain\Mail\Transports\MailJetTransport;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +18,11 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
     {
         $this->app->bind('mailer', function ($app) {
             return new Mailer($app);
+        });
+
+        $this->app->singleton(MailJetTransport::class, function() {
+            $config = $this->app['config']['mail.drivers.mailjet'];
+            return new MailJetTransport($config['url'], $config['publicKey'], $config['privateKey'], $config);
         });
     }
 
