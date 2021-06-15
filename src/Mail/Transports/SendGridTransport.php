@@ -6,7 +6,7 @@ namespace Domain\Mail\Transports;
 
 use Domain\Mail\Messageable;
 
-class SendGridTransport extends ApiTransport
+class SendGridTransport extends ApiBasedTransport
 {
 
     public function submit(Messageable $message)
