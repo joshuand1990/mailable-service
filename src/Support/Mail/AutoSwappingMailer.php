@@ -20,7 +20,7 @@ class AutoSwappingMailer implements Mailerable
 
     public function swapTransportIfException(): self
     {
-        $transports = array_diff($this->mailer->getTransports(), $this->usedTransports);
+        $transports = array_diff($this->mailer->getTransports(), $this->usedTransports);;
         if(count($transports) == 0) {
             $transports = $this->mailer->getTransports();
             $this->usedTransports = [];
@@ -36,9 +36,10 @@ class AutoSwappingMailer implements Mailerable
     {
         try {
             $this->mailer->send($message);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $this->usedTransports[$this->getCurrentTransport()] = $this->getCurrentTransport();
             $this->swapTransportIfException();
+            throw $e;
         }
     }
     public function getUsedTransports(): array
