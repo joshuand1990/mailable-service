@@ -4,8 +4,8 @@
 namespace Tests\Domain\Mail\Transports;
 
 
-use Domain\Mail\Message;
-use Domain\Mail\Transports\MailJetTransport;
+use Domain\Support\Mail\Message;
+use Domain\Support\Mail\Transports\MailJetTransport;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;

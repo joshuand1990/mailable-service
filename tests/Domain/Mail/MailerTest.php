@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Domain\Mail;
 
-use Domain\Mail\Mailer;
+use Domain\Support\Mail\Mailer;
 
 class MailerTest extends \TestCase
 {
@@ -22,7 +22,7 @@ class MailerTest extends \TestCase
             'yyy' => [ 'priority' => 1, 'active' => true ]
         ];
         $mailer = new Mailer(app());
-        $this->assertEquals(['yyy' => 'yyy', 'xxx' => 'xxx'], $mailer->getDrivers());
+        $this->assertEquals(['yyy' => 'yyy', 'xxx' => 'xxx'], $mailer->getTransports());
     }
 
      /** @test */
@@ -33,6 +33,11 @@ class MailerTest extends \TestCase
             'yyy' => [ 'priority' => 1, 'active' => false ]
         ];
         $mailer = new Mailer(app());
-        $this->assertEquals(['xxx' => 'xxx'], $mailer->getDrivers());
+        $this->assertEquals(['xxx' => 'xxx'], $mailer->getTransports());
+    }
+
+    public function it_should_show_the_current_driver()
+    {
+
     }
 }

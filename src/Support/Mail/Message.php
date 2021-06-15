@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Domain\Mail;
+namespace Domain\Support\Mail;
 
 
 class Message implements Messageable
@@ -13,6 +13,7 @@ class Message implements Messageable
     protected array $bcc = [];
     protected string $subject = '';
     protected string $body = '';
+    protected int $id;
 
     public function body(string $content): self
     {
@@ -50,6 +51,11 @@ class Message implements Messageable
         return $this;
     }
 
+    public function id(int $id)
+    {
+        $this->id = $id;
+    }
+
     public function getFromName(): string
     {
         return $this->fromName;
@@ -85,4 +91,8 @@ class Message implements Messageable
         return $this->body;
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

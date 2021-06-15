@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Domain\Mail\Transports;
+namespace Domain\Support\Mail\Transports;
 
 
-use Domain\Mail\Messageable;
+use Domain\Support\Mail\Messageable;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Response;
 use InvalidArgumentException;

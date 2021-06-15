@@ -1,11 +1,12 @@
 <?php
 
 
-namespace Domain\Mail;
+namespace Domain\Support\Mail;
 
 
 interface Messageable
 {
+    public function getId(): int;
     public function getFromName(): string;
     public function getFromEmail(): string;
     public function getTo(): array;

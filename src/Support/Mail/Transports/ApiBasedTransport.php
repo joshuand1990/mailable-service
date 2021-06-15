@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Domain\Mail\Transports;
+namespace Domain\Support\Mail\Transports;
 
 use GuzzleHttp\Client;
 

@@ -1,9 +1,11 @@
 <?php
 
 
-namespace Domain\Mail;
+namespace Domain\Application\Mail;
 
-use Domain\Mail\Transports\MailJetTransport;
+use Domain\Support\Mail\AutoSwappingMailer;
+use Domain\Support\Mail\Mailer;
+use Domain\Support\Mail\Transports\MailJetTransport;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +19,7 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
     public function register()
     {
         $this->app->bind('mailer', function ($app) {
-            return new Mailer($app);
+            return new AutoSwappingMailer(new Mailer($app));
         });
 
         $this->app->singleton(MailJetTransport::class, function () {
@@ -34,7 +36,8 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
     public function provides()
     {
         return [
-            'mailer'
+            'mailer',
+            MailJetTransport::class
         ];
     }
 }

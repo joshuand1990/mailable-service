@@ -1,18 +1,14 @@
 <?php
 
 
-namespace Domain\Mail;
+namespace Domain\Support\Mail;
 
-
-use Domain\Mail\Transports\MailJetTransport;
-use Domain\Mail\Transports\SendGridTransport;
-use Domain\Mail\Transports\Transportable;
+use Domain\Support\Mail\Transports\MailJetTransport;
+use Domain\Support\Mail\Transports\SendGridTransport;
+use Domain\Support\Mail\Transports\Transportable;
 use Illuminate\Contracts\Container\Container as Application;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Pure;
 
-class Mailer
+class Mailer implements Mailerable
 {
     protected Application $app;
     protected string $current;
@@ -21,27 +17,23 @@ class Mailer
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->current = $this->getDefaultTransport();
     }
 
     public function getCurrentTransport() : string
     {
         return $this->current;
     }
-    public function send(Message $message, $usedTransports = []): self
+
+    public function send(Message $message): self
     {
-        $transport = $transport ?? $this->getCurrentTransport();
-        $this->current = $transport;
-
-        if(!array_key_exists($transport, $this->mailers)) {
-            $this->mailers[$transport] = $this->createTransport($transport);
+        if(!array_key_exists($this->getCurrentTransport(), $this->mailers)) {
+            $this->mailers[$this->getCurrentTransport()] = $this->createTransport($this->getCurrentTransport());
         }
-
-        $this->mailers[$transport]->submit($message);
+        $this->mailers[$this->getCurrentTransport()]->submit($message);
         return $this;
     }
 
-    public function getDrivers(): array
+    public function getTransports(): array
     {
         $drivers = collect($this->getConfig()['mail.drivers'])
             ->reject(function ($item) {
@@ -85,8 +77,5 @@ class Mailer
         return $this->app['config'];
     }
 
-    public function getNextTransport($userTransports = [])
-    {
 
-    }
 }
