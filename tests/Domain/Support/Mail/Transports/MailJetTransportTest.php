@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Domain\Mail\Transports;
+namespace Tests\Domain\Support\Mail\Transports;
 
 
 use Domain\Support\Mail\Message;
@@ -36,9 +36,9 @@ class MailJetTransportTest extends \TestCase
         $this->assertEquals($expectation, $transport->formatMessage($message));
     }
     /** @test */
-    public function it_should_()
+    public function it_should_submit_with_ok_status()
     {
-        $mockHandler = $this->swap();
+        $mockHandler = $this->swapInstance();
         $mockHandler->append(new Response(200, [], ' {"Messages":[{"Status":"success","CustomID":"AppGettingStartedTest","To":[{"Email":"joshuand1990@gmail.com","MessageUUID":"4fe86ee6-f896-4e5c-a114-9ea05c99c5d8","MessageID":576460760258009797,"MessageHref":"https://api.mailjet.com/v3/REST/message/576460760258009797"}],"Cc":[],"Bcc":[]}]}'));
         list($expectation, $message) = $this->expectationSetUp();
         $mailjet = app(MailJetTransport::class);
@@ -46,7 +46,7 @@ class MailJetTransportTest extends \TestCase
 
     }
 
-    private function swap()
+    private function swapInstance() : MockHandler
     {
         $mockHandler = new MockHandler();
         $client = new MailJetTransport(null, 'xx', 'xx', [

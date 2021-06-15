@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Domain\Mail;
+namespace Tests\Domain\Support\Mail;
 
 use Domain\Support\Mail\Mailer;
 
@@ -36,8 +36,13 @@ class MailerTest extends \TestCase
         $this->assertEquals(['xxx' => 'xxx'], $mailer->getTransports());
     }
 
+    /** @test */
     public function it_should_show_the_current_driver()
     {
+        $mailer = new Mailer(app());
+        $mailer->setCurrentTransport('xxx');
+
+        $this->assertEquals('xxx', $mailer->getCurrentTransport());
 
     }
 }
