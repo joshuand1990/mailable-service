@@ -11,7 +11,7 @@ help:
 shell:
 	@docker compose exec php sh
 up:
-	@docker compose up
+	@docker compose up --remove-orphans
 build:
 	@docker compose build
 install:
