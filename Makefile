@@ -7,6 +7,8 @@ help:
 	@echo "build"
 	@echo "install"
 	@echo "deps"
+	@echo "test"
+	@echo "command"
 
 shell:
 	@docker compose exec php sh
@@ -20,3 +22,5 @@ deps:
 	@docker compose exec php composer install --prefer-dist
 test:
 	@docker compose exec php composer test
+command:
+	@docker compose exec php php artisan
