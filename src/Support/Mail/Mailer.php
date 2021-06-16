@@ -7,16 +7,19 @@ use Domain\Support\Mail\Transports\MailJetTransport;
 use Domain\Support\Mail\Transports\SendGridTransport;
 use Domain\Support\Mail\Transports\Transportable;
 use Illuminate\Contracts\Container\Container as Application;
+use Illuminate\Contracts\Events\Dispatcher;
 
 class Mailer implements Mailerable
 {
     protected Application $app;
     protected string $current;
     protected array $mailers = [];
+    private ?Dispatcher $events;
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, Dispatcher $events = null)
     {
         $this->app = $app;
+        $this->events = $events;
     }
 
     public function getCurrentTransport() : string
@@ -26,10 +29,13 @@ class Mailer implements Mailerable
 
     public function send(Message $message): self
     {
+        $this->setGlobalSendingAddress($message);
         if(!array_key_exists($this->getCurrentTransport(), $this->mailers)) {
             $this->mailers[$this->getCurrentTransport()] = $this->createTransport($this->getCurrentTransport());
         }
+        $this->dispatchSendingMailEvent($message);
         $this->mailers[$this->getCurrentTransport()]->submit($message);
+        $this->dispatchSentMailEvent($message);
         return $this;
     }
 
@@ -48,6 +54,7 @@ class Mailer implements Mailerable
     {
         return $this->getConfig()['mail.default'];
     }
+
     public function setCurrentTransport(string $transport): self
     {
         $this->current = $transport;
@@ -75,6 +82,40 @@ class Mailer implements Mailerable
     protected function getConfig()
     {
         return $this->app['config'];
+    }
+
+    /**
+     * @param Message $message
+     */
+    protected function dispatchSendingMailEvent(Message $message): void
+    {
+        if(!$this->events) {
+            return;
+        }
+        $this->events->dispatch('email.sending', [ 'message' => $message ]);
+    }
+
+    /**
+     * @param Message $message
+     */
+    protected function dispatchSentMailEvent(Message $message): void
+    {
+        if(!$this->events) {
+            return;
+        }
+        $this->events->dispatch('email.sent', [ 'message' => $message ]);
+    }
+
+    /**
+     * @param Message $message
+     */
+    protected function setGlobalSendingAddress(Message $message): self
+    {
+        $message->from(
+            $this->getConfig()['global.name'] ?? $message->getFromName(),
+            $this->getConfig()['global.email'] ?? $message->getFromEmail()
+        );
+        return $this;
     }
 
 

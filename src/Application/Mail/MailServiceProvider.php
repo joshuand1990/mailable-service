@@ -20,7 +20,7 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
     public function register()
     {
         $this->app->singleton('mailer', function ($app) {
-            return (new AutoSwappingMailer(new Mailer($app)));
+            return (new AutoSwappingMailer(new Mailer($app), $app['events']));
         });
 
         $this->app->singleton(MailJetTransport::class, function () {

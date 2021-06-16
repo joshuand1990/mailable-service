@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'global' => [
+        'from' => env('MAIL_GLOBAL_FROM'),
+        'name' => env('MAIL_GLOBAL_NAME')
+    ],
     'default' => env('MAIL_DRIVER', 'mailjet'),
     'drivers' => [
         'mailjet' => [
