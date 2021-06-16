@@ -15,7 +15,12 @@ class CreateLogemailTable extends Migration
     {
         Schema::create('logemail', function (Blueprint $table) {
             $table->id();
-            $table->text('email');
+            $table->char('email', 100)->index();
+            $table->char('name', 255);
+            $table->text('subject');
+            $table->text('body');
+            $table->char('transport', 50)->index();
+            $table->integer('status')->default(1)->index();
             $table->timestamps();
         });
     }

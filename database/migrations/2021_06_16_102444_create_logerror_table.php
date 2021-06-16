@@ -24,7 +24,6 @@ class CreateLogerrorTable extends Migration
             $table->integer('remote_addr')->nullable()->unsigned();
             $table->string('user_agent')->nullable();
             $table->integer('created_by')->nullable()->index();
-            $table->dateTime('created_at');
             $table->timestamps();
         });
     }
