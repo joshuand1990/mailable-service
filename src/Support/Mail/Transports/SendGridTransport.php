@@ -6,6 +6,7 @@ namespace Domain\Support\Mail\Transports;
 
 use Domain\Support\Mail\Messageable;
 use Exception;
+use GuzzleHttp\Exception\TransferException;
 use InvalidArgumentException;
 
 class SendGridTransport extends ApiBasedTransport
@@ -38,7 +39,7 @@ class SendGridTransport extends ApiBasedTransport
                 ],
                 'json' => $this->formatMessage($message),
             ]);
-        }catch (Exception $e){
+        }catch (TransferException $e){
             throw $e;
         }
 

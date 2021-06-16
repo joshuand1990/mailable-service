@@ -6,6 +6,8 @@ namespace Domain\Support\Mail\Transports;
 
 use Domain\Support\Mail\Messageable;
 use Exception;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
 
@@ -40,8 +42,8 @@ class MailJetTransport extends ApiBasedTransport
             if ($response->getStatusCode() == Response::HTTP_OK) {
                 return true;
             }
-            throw new Exception($response->getStatusCode());
-        } catch (Exception $e){
+            throw new TransferException($response->getStatusCode());
+        } catch (TransferException $e){
             throw $e;
         }
 

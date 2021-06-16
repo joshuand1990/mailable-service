@@ -3,11 +3,9 @@
 
 namespace Tests\Domain\Support\Mail\Transports;
 
-
-
 use Domain\Support\Mail\Transports\MailJetTransport;
-use Exception;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;
@@ -52,7 +50,7 @@ class MailJetTransportTest extends \TestCase
     /** @test */
     public function it_should_throw_error_when_response_is_invalid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(TransferException::class);
         $mailjetMockHandler = $this->swapMailJetInstance();
         $mailjetMockHandler->append(new RequestException("Error", new Request('POST', MailJetTransport::VERSION.'/send'), new Response(500, [])));
         list($expectation, $message) = $this->expectationSetUp();
