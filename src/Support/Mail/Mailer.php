@@ -92,7 +92,7 @@ class Mailer implements Mailerable
         if(!$this->events) {
             return;
         }
-        $this->events->dispatch('email.sending', [ 'message' => $message ]);
+        $this->events->dispatch('email.sending', [ 'message' => $message, 'transport' => $this->getCurrentTransport() ]);
     }
 
     /**
@@ -103,17 +103,17 @@ class Mailer implements Mailerable
         if(!$this->events) {
             return;
         }
-        $this->events->dispatch('email.sent', [ 'message' => $message ]);
+        $this->events->dispatch('email.sent', [ 'message' => $message, 'transport' => $this->getCurrentTransport()]);
     }
 
     /**
      * @param Message $message
      */
-    protected function setGlobalSendingAddress(Message $message): self
+    protected function setGlobalSendingAddress(Message &$message): self
     {
         $message->from(
-            $this->getConfig()['global.name'] ?? $message->getFromName(),
-            $this->getConfig()['global.email'] ?? $message->getFromEmail()
+            $this->getConfig()['mail.global.name'] ?? $message->getFromName(),
+            $this->getConfig()['mail.global.from'] ?? $message->getFromEmail()
         );
         return $this;
     }
