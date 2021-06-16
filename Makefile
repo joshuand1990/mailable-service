@@ -22,5 +22,3 @@ deps:
 	@docker compose exec php composer install --prefer-dist
 test:
 	@docker compose exec php composer test
-command:
-	@docker compose exec php php artisan
