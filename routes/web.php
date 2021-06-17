@@ -13,9 +13,9 @@
 |
 */
 
+use Domain\Application\Actions\StoreEmailAction;
 use Domain\Application\Model\LogEmail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Queue;
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -32,9 +32,8 @@ $router->post('/api/mail', function (Request $request) {
         'subject' => ['required'],
         'body' => ['required']
     ]);
-    $mail = LogEmail::create([
-        'name' => $request->get('name'), 'email' => $request->get('email'), 'subject' =>  $request->get('subject'), 'body' => $request->get('body')
-        ,'transport' => 'tbd'
-    ]);
-    Queue::push(new \App\Jobs\SendTransactionalEmailJob($mail->toMessage()));
+    new StoreEmailAction($request->get('name'), $request->get('email'), $request->get('subject'), $request->get('body'));
+
+    return [ 'status' => 'OK' ];
+
 });

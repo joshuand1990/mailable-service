@@ -3,6 +3,7 @@
 
 namespace Domain\Application\Console;
 
+use Domain\Application\Actions\StoreEmailAction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -20,9 +21,8 @@ class SendEmailCommand extends Command
         $subject = $this->argument('subject');
         $body = $this->argument('body');
 
-        foreach ($tos as $to) {
-            $name = $to;
-            Http::post("\api\mail", compact('to', 'subject', 'body', 'name'));
+        foreach ($tos as $email => $name) {
+            (new StoreEmailAction($name, $email, $subject, $body))->handle();
         }
     }
 }
