@@ -4,6 +4,7 @@
 namespace Domain\Support\Mail;
 
 use Domain\Support\Events\EmailSending;
+use Domain\Support\Events\EmailSendingError;
 use Domain\Support\Events\EmailSent;
 use Domain\Support\Mail\Transports\MailJetTransport;
 use Domain\Support\Mail\Transports\SendGridTransport;
@@ -35,9 +36,14 @@ class Mailer implements Mailerable
         if(!array_key_exists($this->getCurrentTransport(), $this->mailers)) {
             $this->mailers[$this->getCurrentTransport()] = $this->createTransport($this->getCurrentTransport());
         }
-        $this->dispatchSendingMailEvent($message);
-        $this->mailers[$this->getCurrentTransport()]->submit($message);
-        $this->dispatchSentMailEvent($message);
+        try {
+            $this->dispatchSendingMailEvent($message);
+            $this->mailers[$this->getCurrentTransport()]->submit($message);
+            $this->dispatchSentMailEvent($message);
+        }catch (\Exception $e) {
+            $this->dispatchErrorMailEvent($message);
+            throw $e;
+        }
         return $this;
     }
 
@@ -106,6 +112,16 @@ class Mailer implements Mailerable
             return;
         }
         $this->events->dispatch(new EmailSent($message, $this->getCurrentTransport()));
+    }
+     /**
+     * @param Message $message
+     */
+    protected function dispatchErrorMailEvent(Message $message): void
+    {
+        if(!$this->events) {
+            return;
+        }
+        $this->events->dispatch(new EmailSendingError($message, $this->getCurrentTransport()));
     }
 
     /**

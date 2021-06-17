@@ -5,6 +5,7 @@ namespace Tests\Domain\Support\Mail;
 
 
 use Domain\Support\Events\EmailSending;
+use Domain\Support\Events\EmailSendingError;
 use Domain\Support\Events\EmailSent;
 use Domain\Support\Mail\AutoSwappingMailer;
 use Domain\Support\Mail\Mailer;
@@ -32,6 +33,7 @@ class AutoSwappingMailerTest extends \TestCase
         $mailer = $this->app->make('mailer');
         $lastTransport = $mailer->getCurrentTransport();
         $this->simulatingErrorHandling($mailer);
+        Event::assertDispatched(EmailSendingError::class);
         $this->mockHandlerForSendGridSetToOK();
         Event::assertDispatched(EmailSending::class);
         $mailer->send($this->setUpMessage());
