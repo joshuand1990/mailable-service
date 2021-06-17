@@ -7,13 +7,10 @@ namespace Domain\Application\Listeners;
 use Domain\Application\Model\LogEmail;
 use Domain\Support\Events\EmailSending;
 
-class EmailSendingListener
+class EmailSendingListener extends BaseEmailListener
 {
-    public function handle(EmailSending $event)
+    function processStatusUpdate(LogEmail $logmail)
     {
-        $logmail = LogEmail::findOrFail($event->message->getId());
         $logmail->setAsSending();
-        $logmail->transport = $event->transport;
-        $logmail->save();
     }
 }

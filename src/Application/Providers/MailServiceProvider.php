@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Domain\Application\Mail;
+namespace Domain\Application\Providers;
 
 use Domain\Support\Events\EmailSending;
 use Domain\Support\Mail\AutoSwappingMailer;

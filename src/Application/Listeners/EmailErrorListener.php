@@ -4,7 +4,12 @@
 namespace Domain\Application\Listeners;
 
 
-class EmailErrorListener
-{
+use Domain\Application\Model\LogEmail;
 
+class EmailErrorListener extends BaseEmailListener
+{
+    function processStatusUpdate(LogEmail $logmail)
+    {
+        $logmail->setAsError();
+    }
 }

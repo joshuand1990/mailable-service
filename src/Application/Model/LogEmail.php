@@ -30,6 +30,18 @@ class LogEmail extends Model
         return $this;
     }
 
+
+    public function setAsSent()
+    {
+        $this->status = self::SENT;
+        return $this;
+    }
+
+    public function setAsError()
+    {
+        $this->status = self::ERROR;
+        return $this;
+    }
     public function toMessage()
     {
         $message = new Message;
