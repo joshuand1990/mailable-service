@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace Domain\Application\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        SendEmailCommand::class
     ];
 
     /**
