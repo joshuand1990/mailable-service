@@ -14,10 +14,20 @@ class LogEmail extends Model
     use HasFactory;
     protected $table = 'logemail';
     protected $guarded = [];
+    const QUEUED = 1;
+    const SENDING = 2;
+    const SENT = 3;
+    const ERROR = 9;
 
     protected static function newFactory()
     {
         return LogEmailFactory::new();
+    }
+
+    public function setAsSending()
+    {
+        $this->status = self::SENDING;
+        return $this;
     }
 
     public function toMessage()

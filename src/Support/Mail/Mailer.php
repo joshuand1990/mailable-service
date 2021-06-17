@@ -3,6 +3,8 @@
 
 namespace Domain\Support\Mail;
 
+use Domain\Support\Events\EmailSending;
+use Domain\Support\Events\EmailSent;
 use Domain\Support\Mail\Transports\MailJetTransport;
 use Domain\Support\Mail\Transports\SendGridTransport;
 use Domain\Support\Mail\Transports\Transportable;
@@ -87,12 +89,12 @@ class Mailer implements Mailerable
     /**
      * @param Message $message
      */
-    protected function dispatchSendingMailEvent(Message $message): void
+    protected function dispatchSendingMailEvent(Message &$message): void
     {
         if(!$this->events) {
             return;
         }
-        $this->events->dispatch('email.sending', [ 'message' => $message, 'transport' => $this->getCurrentTransport() ]);
+        $this->events->dispatch(new EmailSending($message, $this->getCurrentTransport()));
     }
 
     /**
@@ -103,7 +105,7 @@ class Mailer implements Mailerable
         if(!$this->events) {
             return;
         }
-        $this->events->dispatch('email.sent', [ 'message' => $message, 'transport' => $this->getCurrentTransport()]);
+        $this->events->dispatch(new EmailSent($message, $this->getCurrentTransport()));
     }
 
     /**

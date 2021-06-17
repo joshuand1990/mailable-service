@@ -4,6 +4,8 @@
 namespace Tests\Domain\Support\Mail;
 
 
+use Domain\Support\Events\EmailSending;
+use Domain\Support\Events\EmailSent;
 use Domain\Support\Mail\AutoSwappingMailer;
 use Domain\Support\Mail\Mailer;
 use Domain\Support\Mail\Mailerable;
@@ -31,9 +33,9 @@ class AutoSwappingMailerTest extends \TestCase
         $lastTransport = $mailer->getCurrentTransport();
         $this->simulatingErrorHandling($mailer);
         $this->mockHandlerForSendGridSetToOK();
-        Event::assertDispatched('email.sending');
+        Event::assertDispatched(EmailSending::class);
         $mailer->send($this->setUpMessage());
-        Event::assertDispatched('email.sent');
+        Event::assertDispatched(EmailSent::class);
         $this->assertTrue($mailer->getCurrentTransport() <> $lastTransport);
     }
 

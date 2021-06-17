@@ -3,11 +3,13 @@
 
 namespace Domain\Application\Mail;
 
+use Domain\Support\Events\EmailSending;
 use Domain\Support\Mail\AutoSwappingMailer;
 use Domain\Support\Mail\Mailer;
 use Domain\Support\Mail\Transports\MailJetTransport;
 use Domain\Support\Mail\Transports\SendGridTransport;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
@@ -20,7 +22,7 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
     public function register()
     {
         $this->app->singleton('mailer', function ($app) {
-            return (new AutoSwappingMailer(new Mailer($app), $app['events']));
+            return (new AutoSwappingMailer(new Mailer($app, $app['events'])));
         });
 
         $this->app->singleton(MailJetTransport::class, function () {
@@ -32,6 +34,7 @@ class MailServiceProvider  extends ServiceProvider implements DeferrableProvider
             $config = $this->app['config']['mail.drivers.sendgrid'];
             return new SendGridTransport($config['apiKey'], $config);
         });
+
     }
 
     /**
