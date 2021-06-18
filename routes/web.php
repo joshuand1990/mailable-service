@@ -22,7 +22,19 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/api/mail', function (Request $request) {
-   return LogEmail::query()->get();
+    $mails = [];
+
+    foreach (LogEmail::query()->get() as $mail) {
+        $mails[] = [
+            'id' => $mail->id,
+            'email' => sprintf('%s (%s)', $mail->name, $mail->email),
+            'subject' => $mail->subject,
+            'status' => $mail->status_name,
+            'transport' => strtoupper($mail->transport),
+            'css' => $mail->css
+        ];
+    }
+   return response()->json($mails);
 });
 
 $router->post('/api/mail', function (Request $request) {

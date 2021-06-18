@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-queued {
+    @apply text-purple-700
+}
+.text-sending {
+    @apply text-blue-700
+}
+.text-sent {
+    @apply text-green-700
+}
+.text-error {
+    @apply text-red-700
+}
+.text-na {
+    @apply text-gray-700
+}

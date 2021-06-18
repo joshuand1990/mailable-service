@@ -8,6 +8,7 @@ use Database\Factories\LogEmailFactory;
 use Domain\Support\Mail\Message;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class LogEmail extends Model
 {
@@ -18,6 +19,7 @@ class LogEmail extends Model
     const SENDING = 2;
     const SENT = 3;
     const ERROR = 9;
+    protected $appends = [ 'status_name' ];
 
     protected static function newFactory()
     {
@@ -42,6 +44,7 @@ class LogEmail extends Model
         $this->status = self::ERROR;
         return $this;
     }
+
     public function toMessage()
     {
         $message = new Message;
@@ -50,5 +53,21 @@ class LogEmail extends Model
         $message->subject($this->subject);
         $message->id($this->id);
         return $message;
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return Arr::get([
+            self::QUEUED => 'Queued', self::SENDING => 'Sending',
+            self::SENT => 'Sent', self::ERROR => 'Error'
+        ], $this->status, 'N/A');
+    }
+
+    public function getCssAttribute()
+    {
+        return 'text-' . strtolower(Arr::get([
+            self::QUEUED => 'Queued', self::SENDING => 'Sending',
+            self::SENT => 'Sent', self::ERROR => 'Error'
+        ], $this->status, 'NA'));
     }
 }
