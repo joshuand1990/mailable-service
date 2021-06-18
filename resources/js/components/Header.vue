@@ -3,6 +3,8 @@
       <span class="ml-4 text-lg font-bold text-blue-100 md:text-xl">
       Transactional Email System
       </span>
+      <router-link to="/">App</router-link>
+      <router-link to="/about">About</router-link>
     </header>
 </template>
 

@@ -1,5 +1,4 @@
 <template>
-  <Layout>
       <table class="table-fixed">
         <caption>Emails</caption>
         <thead>
@@ -19,13 +18,12 @@
             </tr>
         </tbody>
     </table>
-  </Layout>
 </template>
 
 <script>
-import Layout from "./components/Layout.vue"
-import axios from "axios"
 
+import axios from "axios"
+import Layout from "./Layout";
 export default {
   name: "App",
   components: {
