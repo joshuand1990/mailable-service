@@ -6,11 +6,13 @@ namespace Domain\Application\Model;
 
 use Database\Factories\LogEmailFactory;
 use Domain\Support\Mail\Message;
+use Domain\Support\Mail\Messageable;
+use Domain\Support\Mail\ShouldBeMessageable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
-class LogEmail extends Model
+class LogEmail extends Model implements ShouldBeMessageable
 {
     use HasFactory;
     protected $table = 'logemail';
@@ -45,7 +47,7 @@ class LogEmail extends Model
         return $this;
     }
 
-    public function toMessage()
+    public function toMessage() : Messageable
     {
         $message = new Message;
         $message->to($this->name, $this->email);
