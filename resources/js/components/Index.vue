@@ -1,28 +1,28 @@
 <template>
-      <table class="table-fixed">
-        <caption>Emails</caption>
-        <thead>
-            <tr>
-                <th class="border w-1/4">Name</th>
-                <th class="border w-1/2">Subject</th>
-                <th class="border w-1/4">Status</th>
-                <th class="border w-1/4">Channel</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(mail, index) in mails" :key="index" >
-                <td class="border px-1 py-1">{{ mail.email  }}</td>
-                <td class="border px-1 py-1">{{ mail.subject }}</td>
-                <td class="border px-1 py-1" v-bind:class="mail.css">{{ mail.status }}</td>
-                <td class="border px-1 py-1">{{ mail.channel }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <div class="overflow-auto absolute truncate" style="max-width: -webkit-fill-available;">
+    <div
+        class="p-2 border-b transition duration-300 cursor-pointer hover:bg-gray-50 flex items-center max-w-full pr-14 items-start"
+        v-for="(mail, index) in mails"
+        :key="index">
+      <div
+          style="min-width: 5em"
+          class="flex-initial text-xs text-center font-semibold inline-block py-1 px-1 uppercase rounded last:mr-0 mr-1"
+          :class="mail.css"
+          :title="mail.status">
+      </div>
+      <div style="min-width: 20rem"
+           class="flex-initial text-sm ml-5 truncate text-gray-700" >
+        <span :title="mail.name">{{ mail.email }}</span>
+      </div>
+      <div class="flex-initial text-sm ml-10 text-gray-700 truncate overflow-auto" >
+        {{ mail.subject }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 
-import axios from "axios"
 import Layout from "./Layout";
 export default {
   name: "App",
@@ -38,10 +38,11 @@ export default {
     async fetchNews() {
       try {
         const url = `/api/mail`
-        const response = await axios.get(url)
+        const response = await this.$http.get(url)
         const results = response.data
         this.mails = results.map(mail => ({
           id: mail.id,
+          name: mail.name,
           email: mail.email,
           subject: mail.subject,
           status: mail.status,

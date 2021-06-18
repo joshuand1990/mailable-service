@@ -68,8 +68,10 @@ class LogEmail extends Model implements ShouldBeMessageable
     public function getCssAttribute()
     {
         return 'text-' . strtolower(Arr::get([
-            self::QUEUED => 'Queued', self::SENDING => 'Sending',
-            self::SENT => 'Sent', self::ERROR => 'Error'
-        ], $this->status, 'NA'));
+            self::QUEUED => 'Queued bx bxs-add-to-queue',
+            self::SENDING => 'Sending bx bx-mail-send',
+            self::SENT => 'Sent bx bxs-navigation',
+            self::ERROR => 'Error bx bxs-error'
+        ], $this->status, 'NA bx bxs-error-alt'));
     }
 }

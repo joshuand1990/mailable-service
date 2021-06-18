@@ -1,9 +1,16 @@
+import VueRouter from 'vue-router'
 
-import App from "./components/App";
+import Index from "./components/Index";
+import Create from "./components/Create";
 
-const About = { template: '<p>about page</p>' }
-
-export default [
-  { path: '/', name: 'home', component: App },
-  { path: '/about', name: 'about', component: About}
+const routes = [
+  { path: '/', name: 'index', component: Index },
+  { path: '/create', name: 'create', component: Create }
 ]
+
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
+})
+export default router

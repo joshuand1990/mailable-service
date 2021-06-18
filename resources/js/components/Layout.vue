@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <Header />
-      <main class="container flex-grow px-4 mx-auto my-12">
+  <div class="flex h-full">
+    <SideBar />
+      <div class="flex-auto overflow-auto">
         <router-view/>
-      </main>
-    <Footer />
+      </div>
   </div>
 </template>
 
 <script>
 import Header from "./Header.vue"
 import Footer from "./Footer.vue"
+import SideBar from './SideBar.vue'
 
 export default {
   name: "Layout",
   components: {
     Header,
-    Footer
+    Footer,
+    SideBar
   },
 }
 </script>
