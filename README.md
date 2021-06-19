@@ -14,6 +14,8 @@ The app utilizes the two email service providers:
 - MailJet 
 - SendGrid
 
+### NOTES: 
+#### Please make sure docker has been installed and api keys have been generated for the email providers  
 ### Installation Instructions with Docker
 ````
 docker run --rm -v $(pwd):/app composer install 
@@ -28,6 +30,8 @@ make up
 - mysql database
 - redis store
 - queue processor
+
+####Edit the ````.env```` file with updated api keys for the email service providers and the from address details
 
 ### API
 ````
