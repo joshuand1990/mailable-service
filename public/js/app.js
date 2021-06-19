@@ -2046,7 +2046,12 @@ __webpack_require__.r(__webpack_exports__);
       };
       this.$v.$touch();
       if (this.$v.$pending || this.$v.$error) return;
-      this.$http.post('/api/mail', message);
+      var self = this;
+      this.$http.post('/api/mail', message).then(function (response) {
+        self.$router.push('/');
+      })["catch"](function (err) {
+        return console.error('there was and error');
+      });
     }
   }
 });
@@ -3696,7 +3701,7 @@ var render = function() {
             _vm._v(" "),
             !_vm.$v.name.required
               ? _c("div", { staticClass: "text-red-300" }, [
-                  _vm._v("The email field is required.")
+                  _vm._v("The Name field is required.")
                 ])
               : _vm._e()
           ])

@@ -93,9 +93,13 @@ export default {
         }
         this.$v.$touch();
         if (this.$v.$pending || this.$v.$error) return;
-
+        let self = this;
         this.$http.post('/api/mail', message)
+            .then(function(response) {
+              self.$router.push('/')
+            }).catch(err => console.error('there was and error'))
       }
+
   }
 
 }
