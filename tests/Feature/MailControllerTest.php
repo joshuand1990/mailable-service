@@ -20,7 +20,7 @@ class MailControllerTest extends \TestCase
         $logs = LogEmail::factory()->count(3)->create();
         $response = $this->get('/api/mail');
         $response->seeJsonStructure([
-            ['id', 'name', 'created_at', 'status', 'transport', 'email', 'body']
+            ['id', 'name', 'created_at', 'status', 'transport', 'email']
         ]);
         $response->assertResponseOk();
     }

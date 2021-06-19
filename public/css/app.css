@@ -32207,26 +32207,36 @@ video {
 }
 
 .text-queued {
+  --tw-bg-opacity: 1;
+  background-color: rgba(221, 214, 254, var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgba(109, 40, 217, var(--tw-text-opacity))
 }
 
 .text-sending {
+  --tw-bg-opacity: 1;
+  background-color: rgba(191, 219, 254, var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgba(29, 78, 216, var(--tw-text-opacity))
 }
 
 .text-sent {
+  --tw-bg-opacity: 1;
+  background-color: rgba(167, 243, 208, var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgba(4, 120, 87, var(--tw-text-opacity))
 }
 
 .text-error {
+  --tw-bg-opacity: 1;
+  background-color: rgba(254, 202, 202, var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgba(185, 28, 28, var(--tw-text-opacity))
 }
 
 .text-na {
+  --tw-bg-opacity: 1;
+  background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgba(55, 65, 81, var(--tw-text-opacity))
 }

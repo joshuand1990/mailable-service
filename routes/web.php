@@ -18,30 +18,30 @@ use Domain\Application\Model\LogEmail;
 use Illuminate\Http\Request;
 
 $router->get('/api/mail', function (Request $request) {
-    $mails = [];
-
-    foreach (LogEmail::query()->get() as $mail) {
-        $mails[] = [
+    $mails = LogEmail::query()->latest()->get()->map(function ($mail){
+        return  [
             'id' => $mail->id,
             'name' => $mail->name,
             'email' => $mail->email,
             'subject' => $mail->subject,
             'status' => $mail->status_name,
             'transport' => strtoupper($mail->transport),
-            'css' => $mail->css
+            'css' => $mail->css,
+            'created_at' => $mail->created_at
         ];
-    }
+    });
+
    return response()->json($mails);
 });
 
 $router->post('/api/mail', function (Request $request) {
     $this->validate($request, [
-        'email' => ['required'],
         'name' => ['required'],
+        'email' => ['required'],
         'subject' => ['required'],
         'body' => ['required']
     ]);
-    new StoreEmailAction($request->get('name'), $request->get('email'), $request->get('subject'), $request->get('body'));
+    (new StoreEmailAction($request->get('name'), $request->get('email'), $request->get('subject'), $request->get('body')))->handle();
 
     return [ 'status' => 'OK' ];
 

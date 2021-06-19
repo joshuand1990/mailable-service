@@ -1,5 +1,6 @@
 <template>
   <div class="overflow-auto absolute truncate" style="max-width: -webkit-fill-available;">
+    <form id="sendmail-form" v-on:submit.prevent="submit">
     <div
         class="p-2 border-b transition duration-300 cursor-pointer hover:bg-gray-50 flex items-center max-w-full pr-14 items-start"
         v-for="(mail, index) in mails"
@@ -18,6 +19,7 @@
         {{ mail.subject }}
       </div>
     </div>
+    </form>
   </div>
 </template>
 
