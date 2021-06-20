@@ -21,6 +21,7 @@ The app utilizes the two email service providers:
 
 ### Installation Instructions with Docker
 ````
+clone the repository
 docker run --rm -v $(pwd):/app composer install 
 cp .env.example .env
 make build
